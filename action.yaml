@@ -22,7 +22,7 @@ runs:
       run: |
         . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
         
-        if (-not ( [string]::IsNullOrEmtpy(${{ inputs.FixedVersion }}) ) ) {
+        if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
           Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
           if ($IsLinux) {
             $OS = 'linux'
@@ -57,7 +57,7 @@ runs:
       run: |
         . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
         
-        if (-not ( [string]::IsNullOrEmtpy(${{ inputs.FixedVersion }}) ) ) {
+        if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
           Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
           $OS = 'win'
           switch ($env:PROCESSOR_ARCHITECTURE) {
