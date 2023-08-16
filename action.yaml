@@ -1,0 +1,77 @@
+name: "PWSHUpdater"
+
+description: "Update the runner PowerShell version to whichever version you want!"
+
+branding:
+  icon: 'user-x'
+  color: 'purple'
+
+inputs:
+  ReleaseVersion:
+    description: "Predefined powershell version. ('daily', 'stable', 'lts', 'preview')"
+    default: "stable"
+  FixedVersion:
+    description: "If a set version is wanted. ('7.1.0', 'v7.4.0-preview.4')"
+
+runs:
+  using: "composite"
+  steps: 
+    - shell: pwsh
+      id: LinuxAndOsx
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      run: |
+        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        
+        if (-not ( [string]::IsNullOrEmtpy(${{ inputs.FixedVersion }}) ) ) {
+          Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
+          if ($IsLinux) {
+            $OS = 'linux'
+            $unameOutput = uname -m
+              switch -Wildcard ($unameOutput) {
+                'x86_64' { $architecture = 'x64' }
+                'aarch64*' { $architecture = 'arm64' }
+                'armv8*' { $architecture = 'arm64' }
+              }
+          }
+          elseif ($IsMacOS) {
+            $OS = 'osx'
+            $unameOutput = uname -m
+              switch ($unameOutput) {
+                'x86_64' { $architecture = 'x64' }
+                'arm64' { $architecture = 'arm64' }
+              }
+          }
+
+          $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
+        }
+        else {
+          Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
+          $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+        }
+        
+        Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
+    
+    - shell: PowerShell
+      id: Windows
+      if: runner.os == 'Windows'
+      run: |
+        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        
+        if (-not ( [string]::IsNullOrEmtpy(${{ inputs.FixedVersion }}) ) ) {
+          Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
+          $OS = 'win'
+          switch ($env:PROCESSOR_ARCHITECTURE) {
+            'AMD64' { $architecture = 'x64' }
+            'x86' { $architecture = 'x86' }
+            'ARM64' { $architecture = 'arm64' }
+            default { throw "PowerShell package for OS architecture '$_' is not supported." }
+          }
+
+          $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
+        }
+        else {
+          Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
+          $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+        }
+
+        Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
