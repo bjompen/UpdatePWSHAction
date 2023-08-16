@@ -1,0 +1,14 @@
+name: RunAction
+
+on:
+  workflow_dispatch:
+
+jobs:
+  TestOs:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: bjompen/UpdatePWSHAction@9fef4db61e9273f45eef22c24b1f05e2390c1837
