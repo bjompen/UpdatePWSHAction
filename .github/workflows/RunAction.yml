@@ -67,3 +67,18 @@ jobs:
         run: |
           pwsh -version
         
+  TestFail:
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - shell: pwsh
+        run: |
+          pwsh -version
+      - uses: bjompen/UpdatePWSHAction@4b723c74023e6dfc7d2d95426cfb2ba6d094835b
+        with:
+          FixedVersion: '666.666.666'
+        
