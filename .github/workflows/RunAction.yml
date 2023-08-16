@@ -11,4 +11,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - shell: pwsh
+        run: |
+          pwsh -version
       - uses: bjompen/UpdatePWSHAction@9fef4db61e9273f45eef22c24b1f05e2390c1837
+      - shell: pwsh
+        run: |
+          pwsh -version
