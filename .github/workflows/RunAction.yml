@@ -14,7 +14,7 @@ jobs:
       - shell: pwsh
         run: |
           pwsh -version
-      - uses: bjompen/UpdatePWSHAction@0fa646e86a1535c17d096d547a3ae7521ed7d7ed
+      - uses: bjompen/UpdatePWSHAction@4b723c74023e6dfc7d2d95426cfb2ba6d094835b
       - shell: pwsh
         run: |
           pwsh -version
