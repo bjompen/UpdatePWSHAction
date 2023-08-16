@@ -30,7 +30,7 @@ function Invoke-PowerShellVersionDownload {
             $release = $metadata.ReleaseTag -replace '^v'
             $blobName = $metadata.BlobName
         
-            if (($IsWindows) -or (Test-Path $env:ProgramFiles)) {
+            if (($IsWindows) -or (-not ([string]::IsNullOrEmpty("$env:ProgramFiles")))) {
                 switch ($env:PROCESSOR_ARCHITECTURE) {
                     'AMD64' { $architecture = 'x64' }
                     'x86' { $architecture = 'x86' }
@@ -117,7 +117,7 @@ function Install-PowerShellVersion {
     }
 
     # Installation stuff.
-    if (($IsWindows) -or (Test-Path $env:ProgramFiles)) {
+    if (($IsWindows) -or (-not ([string]::IsNullOrEmpty("$env:ProgramFiles")))) {
         Write-Verbose "Installing PWSH"
         try {
             if (Test-Path "$env:ProgramFiles\PowerShell\7") {
