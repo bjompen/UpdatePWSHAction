@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  TestOs:
+  TestDefault:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -18,3 +18,52 @@ jobs:
       - shell: pwsh
         run: |
           pwsh -version
+  TestDaily:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - shell: pwsh
+        run: |
+          pwsh -version
+      - uses: bjompen/UpdatePWSHAction@4b723c74023e6dfc7d2d95426cfb2ba6d094835b
+        with:
+          ReleaseVersion: 'Daily'
+      - shell: pwsh
+        run: |
+          pwsh -version
+  TestPreview:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - shell: pwsh
+        run: |
+          pwsh -version
+      - uses: bjompen/UpdatePWSHAction@4b723c74023e6dfc7d2d95426cfb2ba6d094835b
+        with:
+          ReleaseVersion: 'Preview'
+      - shell: pwsh
+        run: |
+          pwsh -version
+  TestFixed:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - shell: pwsh
+        run: |
+          pwsh -version
+      - uses: bjompen/UpdatePWSHAction@4b723c74023e6dfc7d2d95426cfb2ba6d094835b
+        with:
+          FixedVersion: '7.1.0'
+      - shell: pwsh
+        run: |
+          pwsh -version
+        
