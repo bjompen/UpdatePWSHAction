@@ -1,64 +1,4 @@
 
-Function Add-PathTToSettings {
-    <#
-    .Synopsis
-        Adds a Path to settings (Supports Windows Only)
-    .DESCRIPTION
-        Adds the target path to the target registry.
-    .Parameter Path
-        The path to add to the registry. It is validated with Test-PathNotInSettings which ensures that:
-        -The path exists
-        -Is a directory
-        -Is not in the registry (HKCU or HKLM)
-    .Parameter Target
-        The target hive to install the Path to.
-        Must be either User or Machine
-        Defaults to User
-    #>
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [string] $Path,
-
-        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet([System.EnvironmentVariableTarget]::User, [System.EnvironmentVariableTarget]::Machine)]
-        [System.EnvironmentVariableTarget] $Target = ([System.EnvironmentVariableTarget]::User)
-    )
-
-    if ($Target -eq [System.EnvironmentVariableTarget]::User) {
-        [string] $Environment = 'Environment'
-        [Microsoft.Win32.RegistryKey] $Key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($Environment, [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree)
-    } else {
-        [string] $Environment = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
-        [Microsoft.Win32.RegistryKey] $Key = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($Environment, [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree)
-    }
-
-    # $key is null here if it the user was unable to get ReadWriteSubTree access.
-    if ($null -eq $Key) {
-        throw (New-Object -TypeName 'System.Security.SecurityException' -ArgumentList "Unable to access the target registry")
-    }
-
-    # Get current unexpanded value
-    [string] $CurrentUnexpandedValue = $Key.GetValue('PATH', '', [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
-
-    # Keep current PathValueKind if possible/appropriate
-    try {
-        [Microsoft.Win32.RegistryValueKind] $PathValueKind = $Key.GetValueKind('PATH')
-    } catch {
-        [Microsoft.Win32.RegistryValueKind] $PathValueKind = [Microsoft.Win32.RegistryValueKind]::ExpandString
-    }
-
-    # Evaluate new path
-    $NewPathValue = [string]::Concat($CurrentUnexpandedValue.TrimEnd([System.IO.Path]::PathSeparator), [System.IO.Path]::PathSeparator, $Path)
-
-    # Upgrade PathValueKind to [Microsoft.Win32.RegistryValueKind]::ExpandString if appropriate
-    if ($NewPathValue.Contains('%')) { $PathValueKind = [Microsoft.Win32.RegistryValueKind]::ExpandString }
-
-    $Key.SetValue("PATH", $NewPathValue, $PathValueKind)
-}
-
 function Invoke-PowerShellVersionDownload {
     [CmdletBinding(DefaultParameterSetName = 'predefined')]
     param (
@@ -90,7 +30,7 @@ function Invoke-PowerShellVersionDownload {
             $release = $metadata.ReleaseTag -replace '^v'
             $blobName = $metadata.BlobName
         
-            if ($IsWindows) {
+            if (($IsWindows) -or (Test-Path $env:ProgramFiles)) {
                 switch ($env:PROCESSOR_ARCHITECTURE) {
                     'AMD64' { $architecture = 'x64' }
                     'x86' { $architecture = 'x86' }
@@ -177,17 +117,17 @@ function Install-PowerShellVersion {
     }
 
     # Installation stuff.
-    if ($IsWindows) {
-        # Remove the current powershell from PATH
-        [string] $Environment = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
-        [Microsoft.Win32.RegistryKey] $Key = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($Environment, [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree)
-        $NoPwsh = $key.GetValue('PATH') -split [System.IO.Path]::PathSeparator | Where-Object {$_ -notlike "*\PowerShell\*"}
-        $NewPathValue = $($NoPwsh -join [System.IO.Path]::PathSeparator)
-        $Key.SetValue("PATH", $NewPathValue, [Microsoft.Win32.RegistryValueKind]::ExpandString)
-        
-        # Add new powershell
-        $TargetRegistry = [System.EnvironmentVariableTarget]::User
-        Add-PathTToSettings -Path $targetFolder -Target $TargetRegistry
+    if (($IsWindows) -or (Test-Path $env:ProgramFiles)) {
+        Write-Verbose "Installing PWSH"
+        try {
+            if (Test-Path "$env:ProgramFiles\PowerShell\7") {
+                Remove-Item "$env:ProgramFiles\PowerShell\7" -Recurse -Force
+            }
+            Copy-Item -Path "$targetFolder\" -Destination "$env:ProgramFiles\PowerShell\7\" -Recurse
+        }
+        catch {
+            throw "failed to copy totarget folder. Are you currently running pwsh.exe? Cant replace locked files!"
+        }
     }
     if ($IsLinux) {
         $targetFullPath = Join-Path -Path $targetFolder -ChildPath "pwsh"
@@ -212,6 +152,3 @@ function Install-PowerShellVersion {
     }
     
 }
-
-$DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion daily
-Install-PowerShellVersion -ArchiveFile $DownloadedPwsh

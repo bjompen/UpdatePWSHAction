@@ -1,0 +1,37 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pool:
+  vmImage: Windows-latest
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "----------------------------------------"
+      pwsh -version
+      Write-Host "----------------------------------------"
+    pwsh: true
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      powershell.exe -Command ". '$(Pipeline.Workspace)/s/testUpgradePwsh.ps1' ; $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion daily -Verbose ; $targetFolder = Join-Path -Path (Resolve-Path ~).Path -ChildPath '7' ; Expand-Archive -Path $DownloadedPwsh -DestinationPath $targetFolder"
+
+      rmdir 7 /S /Q
+      popd
+      xcopy "%USERPROFILE%\7\" "%ProgramFiles%\PowerShell\7\" /E
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "----------------------------------------"
+      pwsh -version
+      Write-Host "----------------------------------------"
+    pwsh: true
