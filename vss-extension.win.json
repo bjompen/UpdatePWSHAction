@@ -1,0 +1,41 @@
+{
+    "manifestVersion": 1,
+    "id": "PWSHUpdaterWin",
+    "name": "PowerShell Updater for Windows runners",
+    "version": "0.0.2",
+    "publisher": "Bjompen",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Updates or installs a specific release of PowerShell. This task will only run on Windows build hosts.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "PWSHUpdater/icon.png"        
+    },
+    "links": {
+        "support": {
+            "uri": "https://github.com/bjompen/UpdatePWSHAction/issues"
+        }
+    },
+    "files": [
+        {
+            "path": "PWSHUpdater"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "PWSHUpdater",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "PWSHUpdater"
+            }
+        }
+    ]
+}

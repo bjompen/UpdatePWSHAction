@@ -20,7 +20,7 @@ runs:
       id: LinuxAndOsx
       if: runner.os == 'Linux' || runner.os == 'macOS'
       run: |
-        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        . "$env:GITHUB_ACTION_PATH/PWSHUpdater/UpgradePwsh.ps1"
         
         if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
           Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
@@ -55,7 +55,7 @@ runs:
       id: Windows
       if: runner.os == 'Windows'
       run: |
-        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        . "$env:GITHUB_ACTION_PATH/PWSHUpdater/UpgradePwsh.ps1"
         
         if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
           Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"

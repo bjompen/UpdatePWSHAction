@@ -101,7 +101,7 @@ function Install-PowerShellVersion {
 
     $targetFolder = Join-Path -Path (Resolve-Path ~).Path -ChildPath $($ArchiveFile.BaseName -replace '\.tar$')
     if (-not (Test-Path $targetFolder)) {
-        New-Item -Path $targetFolder -ItemType Directory
+        $null = New-Item -Path $targetFolder -ItemType Directory
     }
 
     if ($ArchiveFile.Extension -eq '.zip') {
