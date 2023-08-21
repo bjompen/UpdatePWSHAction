@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "13f0b6c6-4ba5-41f3-99bf-1acb840a3f68",
+  "name": "PWSHUpdaterNix",
+  "friendlyName": "PWSHUpdaterForNix",
+  "description": "Update the runner PowerShell version to whichever version you want!",
+  "author": "Björn Sundling",
+  "helpMarkDown": "Help and bug reports: [https://github.com/bjompen/UpdatePWSHAction](https://github.com/bjompen/UpdatePWSHAction)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "2"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "PWSHUpdater $(message)",
+  "inputs": [
+    {
+      "name": "ReleaseVersion",
+      "type": "string",
+      "label": "Release version ('daily', 'stable', 'lts', 'preview')",
+      "defaultValue": "stable",
+      "required": false,
+      "helpMarkDown": "Set this to the desired build of PWSH. ('daily', 'stable', 'lts', 'preview')"
+    },
+    {
+      "name": "FixedVersion",
+      "type": "string",
+      "label": "Fixed version",
+      "required": false,
+      "helpMarkDown": "Set this to a required specific version of PWSH.  ('7.1.0', 'v7.4.0-preview.4', etc.)"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "index.js"
+  }
+  }
+}

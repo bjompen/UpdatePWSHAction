@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
-    "id": "PWSHUpdaterWin",
-    "name": "PowerShell Updater for Windows runners",
+    "id": "PWSHUpdaterNix",
+    "name": "PowerShell Updater for Linux and MacOS runners",
     "version": "0.0.2",
     "publisher": "Bjompen",
     "targets": [
@@ -9,12 +9,12 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],    
-    "description": "Updates or installs a specific release of PowerShell. This task will only run on Windows build hosts.",
+    "description": "Updates or installs a specific release of PowerShell. This task will only run on Linux and MacOS build hosts.",
     "categories": [
         "Azure Pipelines"
     ],
     "icons": {
-        "default": "icon.png"        
+        "default": "icon.png"
     },
     "links": {
         "support": {
@@ -23,10 +23,10 @@
     },
     "files": [
         {
-            "path": "PWSHUpdaterWin"
+            "path": "PWSHUpdaterNix"
         },
         {
-            "path": "UpgradePwsh.ps1", "packagePath": "/PWSHUpdaterWin/UpgradePwsh.ps1"
+            "path": "UpgradePwsh.ps1", "packagePath": "/PWSHUpdaterNix/UpgradePwsh.ps1"
         }
     ],
     "contributions": [
@@ -37,7 +37,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "PWSHUpdaterWin"
+                "name": "PWSHUpdaterNix"
             }
         }
     ]
