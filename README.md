@@ -46,30 +46,20 @@ This will install version 7.1.0 of PowerShell.
 
 ### Azure DevOps
 
-Currently the first goal is two versions of the Azure DevOps task:
-
-- For Windows hosts.
-  - This uses the PowerShell3 runtime to update pwsh. In Windows we cant update pwsh from pwsh, and using PowerShell3 forces the usage of PowerShell for Windows, which may not be the best solution, but it works for now.
-
-- For Linux and MacOS hosts
-  - Not yet published. This will be using the Node16 runtime and hopefully be cross platform, but time will tell.
-
-#### Installation
-
 Go to the [Azure DevOps Marketplace](https://marketplace.visualstudio.com/azuredevops) and search, or go to [my publisher page](https://marketplace.visualstudio.com/publishers/Bjompen) and find it there.
 
 Add it to your pipeline using the snippet
 
 ```yaml
-- task: PWSHUpdaterWin@0
+- task: PWSHUpdater@0
 # This will install the latest Stable release
 
-- task: PWSHUpdaterWin@0
+- task: PWSHUpdater@0
   inputs:
     ReleaseVersion: 'daily'
 # This will install the latest Daily release
 
-- task: PWSHUpdaterWin@0
+- task: PWSHUpdater@0
   inputs:
     FixedVersion: '7.1.0'
 # This will install pwsh version 7.1.0
@@ -78,7 +68,7 @@ Add it to your pipeline using the snippet
 Please note that FixedVersion will take precedence!
 
 ```yaml
-- task: PWSHUpdaterWin@0
+- task: PWSHUpdater@0
   inputs:
     ReleaseVersion: 'daily'
     FixedVersion: '7.1.0'
