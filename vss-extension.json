@@ -1,0 +1,44 @@
+{
+    "manifestVersion": 1,
+    "id": "PWSHUpdater",
+    "name": "PowerShell Updater for Windows, Linux, and MacOS runners",
+    "version": "0.0.3",
+    "publisher": "Bjompen",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Updates or installs a specific release of PowerShell.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "icon.png"
+    },
+    "links": {
+        "support": {
+            "uri": "https://github.com/bjompen/UpdatePWSHAction/issues"
+        }
+    },
+    "files": [
+        {
+            "path": "PWSHUpdater"
+        },
+        {
+            "path": "UpgradePwsh.ps1", "packagePath": "/PWSHUpdater/UpgradePwsh.ps1"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "PWSHUpdater",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "PWSHUpdater"
+            }
+        }
+    ]
+}

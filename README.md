@@ -5,6 +5,10 @@ GitHub action and Azure DevOps task to update the cloud runner version of PowerS
 The build hosts of Azure DevOps and GitHub defaults to running the latest LTS version of PowerShell.
 In some cases we need, or want, to test or run code using a different version. This is where this action will help you.
 
+> Most, not all, of the PowerShell code here is stolen and adapted from [install-powershell.ps1 on PowerShell GitHub](https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/install-powershell.ps1).
+> 
+> The Azure DevOps Task was created with _a lot_ of help from [Barbara Forbes](https://4bes.nl/2021/02/21/create-a-custom-azure-devops-powershell-task/) blog post on the subject. 
+
 ## Usage
 
 ### GitHub action
@@ -39,3 +43,44 @@ While it is technically possible to set both Fixed and Release version, Fixed wi
 This will install version 7.1.0 of PowerShell.
 
 > Setting a FixedVersion requires you to know this version exists. If you input a non released version this step will fail with weird errors.
+
+### Azure DevOps
+
+Currently the first goal is two versions of the Azure DevOps task:
+
+- For Windows hosts.
+  - This uses the PowerShell3 runtime to update pwsh. In Windows we cant update pwsh from pwsh, and using PowerShell3 forces the usage of PowerShell for Windows, which may not be the best solution, but it works for now.
+
+- For Linux and MacOS hosts
+  - Not yet published. This will be using the Node16 runtime and hopefully be cross platform, but time will tell.
+
+#### Installation
+
+Go to the [Azure DevOps Marketplace](https://marketplace.visualstudio.com/azuredevops) and search, or go to [my publisher page](https://marketplace.visualstudio.com/publishers/Bjompen) and find it there.
+
+Add it to your pipeline using the snippet
+
+```yaml
+- task: PWSHUpdaterWin@0
+# This will install the latest Stable release
+
+- task: PWSHUpdaterWin@0
+  inputs:
+    ReleaseVersion: 'daily'
+# This will install the latest Daily release
+
+- task: PWSHUpdaterWin@0
+  inputs:
+    FixedVersion: '7.1.0'
+# This will install pwsh version 7.1.0
+```
+
+Please note that FixedVersion will take precedence!
+
+```yaml
+- task: PWSHUpdaterWin@0
+  inputs:
+    ReleaseVersion: 'daily'
+    FixedVersion: '7.1.0'
+# This will install pwsh version 7.1.0
+```

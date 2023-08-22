@@ -1,0 +1,21 @@
+{
+  "name": "PWSHUpdater",
+  "version": "0.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.5.0",
+    "@types/q": "^1.5.5",
+    "sync-request": "^6.1.0"
+  }
+}
