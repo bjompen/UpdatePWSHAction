@@ -1,5 +1,8 @@
-[string]$ReleaseVersion = Get-VstsInput -Name ReleaseVersion
-[string]$FixedVersion = Get-VstsInput -Name FixedVersion
+[CmdletBinding()]
+param (
+  [string]$ReleaseVersion,
+  [string]$FixedVersion
+)
 
 . "$PSScriptRoot/UpgradePwsh.ps1"
 
@@ -33,11 +36,11 @@ if (-not ( [string]::IsNullOrEmpty("$FixedVersion") ) ) {
     }
   }
 
-  $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version $FixedVersion -OperatingSystem $OS -Architecture $architecture -Verbose
+  $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version $FixedVersion -OperatingSystem $OS -Architecture $architecture
 }
 else {
   Write-Host "Installing PowerShell version $ReleaseVersion"
-  $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion $ReleaseVersion -Verbose
+  $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion $ReleaseVersion
 }
 
-Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
+Install-PowerShellVersion -ArchiveFile $DownloadedPwsh

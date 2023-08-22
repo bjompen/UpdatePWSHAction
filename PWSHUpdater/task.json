@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "13f0b6c6-4ba5-41f3-99bf-1acb840a3f68",
-  "name": "PWSHUpdaterNix",
-  "friendlyName": "PWSHUpdaterForNix",
+  "name": "PWSHUpdater",
+  "friendlyName": "PWSHUpdater",
   "description": "Update the runner PowerShell version to whichever version you want!",
   "author": "Björn Sundling",
   "helpMarkDown": "Help and bug reports: [https://github.com/bjompen/UpdatePWSHAction](https://github.com/bjompen/UpdatePWSHAction)",
@@ -15,7 +15,7 @@
   "version": {
     "Major": "0",
     "Minor": "0",
-    "Patch": "2"
+    "Patch": "3"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "PWSHUpdater $(message)",
