@@ -13,11 +13,11 @@ jobs:
       - uses: actions/checkout@v3
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
       - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
   TestDaily:
     strategy:
       matrix:
@@ -27,13 +27,13 @@ jobs:
       - uses: actions/checkout@v3
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
       - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
         with:
           ReleaseVersion: 'Daily'
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
   TestPreview:
     strategy:
       matrix:
@@ -43,13 +43,13 @@ jobs:
       - uses: actions/checkout@v3
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
       - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
         with:
           ReleaseVersion: 'Preview'
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
   TestFixed:
     strategy:
       matrix:
@@ -59,13 +59,13 @@ jobs:
       - uses: actions/checkout@v3
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
       - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
         with:
           FixedVersion: '7.1.0'
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
         
   TestFail:
     continue-on-error: true
@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@v3
       - shell: pwsh
         run: |
-          pwsh -version
+          $PSVersionTable
       - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
         with:
           FixedVersion: '666.666.666'
