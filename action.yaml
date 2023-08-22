@@ -20,58 +20,68 @@ runs:
       id: LinuxAndOsx
       if: runner.os == 'Linux' || runner.os == 'macOS'
       run: |
-        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        try {
+          . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
         
-        if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
-          Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
-          if ($IsLinux) {
-            $OS = 'linux'
-            $unameOutput = uname -m
-              switch -Wildcard ($unameOutput) {
-                'x86_64' { $architecture = 'x64' }
-                'aarch64*' { $architecture = 'arm64' }
-                'armv8*' { $architecture = 'arm64' }
-              }
-          }
-          elseif ($IsMacOS) {
-            $OS = 'osx'
-            $unameOutput = uname -m
-              switch ($unameOutput) {
-                'x86_64' { $architecture = 'x64' }
-                'arm64' { $architecture = 'arm64' }
-              }
-          }
+          if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
+            Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
+            if ($IsLinux) {
+              $OS = 'linux'
+              $unameOutput = uname -m
+                switch -Wildcard ($unameOutput) {
+                  'x86_64' { $architecture = 'x64' }
+                  'aarch64*' { $architecture = 'arm64' }
+                  'armv8*' { $architecture = 'arm64' }
+                }
+            }
+            elseif ($IsMacOS) {
+              $OS = 'osx'
+              $unameOutput = uname -m
+                switch ($unameOutput) {
+                  'x86_64' { $architecture = 'x64' }
+                  'arm64' { $architecture = 'arm64' }
+                }
+            }
 
-          $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
+            $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
+          }
+          else {
+            Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
+            $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+          }
+          
+          Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
         }
-        else {
-          Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
-          $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+        catch {
+          Write-Host "::Error::Failed to upgrade PWSH version. This _may_ mean your runner now doesn't work. Error: $($_.Exception.message)"
         }
-        
-        Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
     
     - shell: PowerShell
       id: Windows
       if: runner.os == 'Windows'
       run: |
-        . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
+        try {
+          . "$env:GITHUB_ACTION_PATH/UpgradePwsh.ps1"
         
-        if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
-          Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
-          $OS = 'win'
-          switch ($env:PROCESSOR_ARCHITECTURE) {
-            'AMD64' { $architecture = 'x64' }
-            'x86' { $architecture = 'x86' }
-            'ARM64' { $architecture = 'arm64' }
-            default { throw "PowerShell package for OS architecture '$_' is not supported." }
+          if (-not ( [string]::IsNullOrEmpty("${{ inputs.FixedVersion }}") ) ) {
+            Write-Host "::notice::Trying to install fixed PowerShell version ${{ inputs.FixedVersion }}"
+            $OS = 'win'
+            switch ($env:PROCESSOR_ARCHITECTURE) {
+              'AMD64' { $architecture = 'x64' }
+              'x86' { $architecture = 'x86' }
+              'ARM64' { $architecture = 'arm64' }
+              default { throw "PowerShell package for OS architecture '$_' is not supported." }
+            }
+
+            $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
           }
-
-          $DownloadedPwsh = Invoke-PowerShellVersionDownload -Version ${{ inputs.FixedVersion }} -OperatingSystem $OS -Architecture $architecture -Verbose
+          else {
+            Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
+            $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+          }
+        
+          Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
         }
-        else {
-          Write-Host "::notice::Installing PowerShell version ${{ inputs.ReleaseVersion }}"
-          $DownloadedPwsh = Invoke-PowerShellVersionDownload -ReleaseVersion ${{ inputs.ReleaseVersion }} -Verbose
+        catch {
+          Write-Host "::Error::Failed to upgrade PWSH version. This _may_ mean your runner now doesn't work. Error: $($_.Exception.message)"
         }
-
-        Install-PowerShellVersion -ArchiveFile $DownloadedPwsh -Verbose
