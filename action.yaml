@@ -54,6 +54,7 @@ runs:
         }
         catch {
           Write-Error "::Error::Failed to upgrade PWSH version. This _may_ mean your runner now doesn't work. Error: $($_.Exception.message)"
+          exit 1
         }
     
     - shell: PowerShell
@@ -84,4 +85,5 @@ runs:
         }
         catch {
           Write-Error "::Error::Failed to upgrade PWSH version. This _may_ mean your runner now doesn't work. Error: $($_.Exception.message)"
+          exit 1
         }
