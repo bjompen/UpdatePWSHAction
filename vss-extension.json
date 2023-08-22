@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "PWSHUpdater",
     "name": "PowerShell Updater for Windows, Linux, and MacOS runners",
-    "version": "0.0.3",
+    "version": "1.0.0",
     "publisher": "Bjompen",
     "targets": [
         {
