@@ -14,7 +14,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
+      - uses: bjompen/UpdatePWSHAction@041bb063a52a5f4b0f3161530cd12ffabc2bcb4d
       - shell: pwsh
         run: |
           $PSVersionTable
@@ -28,7 +28,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
+      - uses: bjompen/UpdatePWSHAction@041bb063a52a5f4b0f3161530cd12ffabc2bcb4d
         with:
           ReleaseVersion: 'Daily'
       - shell: pwsh
@@ -44,7 +44,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
+      - uses: bjompen/UpdatePWSHAction@041bb063a52a5f4b0f3161530cd12ffabc2bcb4d
         with:
           ReleaseVersion: 'Preview'
       - shell: pwsh
@@ -60,7 +60,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
+      - uses: bjompen/UpdatePWSHAction@041bb063a52a5f4b0f3161530cd12ffabc2bcb4d
         with:
           FixedVersion: '7.1.0'
       - shell: pwsh
@@ -78,7 +78,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@339a601abfed41935c6912df9e5d57a925828469
+      - uses: bjompen/UpdatePWSHAction@041bb063a52a5f4b0f3161530cd12ffabc2bcb4d
         with:
           FixedVersion: '666.666.666'
         
