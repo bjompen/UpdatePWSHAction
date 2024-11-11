@@ -4,6 +4,17 @@
     "name": "PowerShell Updater for Windows, Linux, and MacOS runners",
     "version": "1.0.0",
     "publisher": "Bjompen",
+    "galleryFlags": [
+        "Public"
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        },
+        "license": {
+            "path": "LICENSE"
+        }
+    },
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -18,6 +29,9 @@
     },
     "links": {
         "support": {
+            "uri": "https://github.com/bjompen/UpdatePWSHAction/issues"
+        },
+        "issues": {
             "uri": "https://github.com/bjompen/UpdatePWSHAction/issues"
         }
     },

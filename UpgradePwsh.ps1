@@ -27,8 +27,8 @@ function Invoke-PowerShellVersionDownload {
             
             Write-Verbose $metadata
 
+            $blobName = $metadata.ReleaseTag
             $release = $metadata.ReleaseTag -replace '^v'
-            $blobName = $metadata.BlobName
         
             if (($IsWindows) -or (-not ([string]::IsNullOrEmpty("$env:ProgramFiles")))) {
                 switch ($env:PROCESSOR_ARCHITECTURE) {
@@ -64,7 +64,7 @@ function Invoke-PowerShellVersionDownload {
             if (($OperatingSystem -ne 'win') -and ($Architecture -eq 'x86')) {
                 throw 'x86 platform is only supported on Windows.'
             }
-            $blobName = $Version.replace('.','-')
+            $blobName = $Version
             if ($blobName -notmatch '^v') {
                 $blobName = "v$blobName"
             }
@@ -80,7 +80,8 @@ function Invoke-PowerShellVersionDownload {
     }
 
 
-    $downloadURL = "https://pscoretestdata.blob.core.windows.net/${blobName}/${packageName}"
+    $downloadURL = "https://github.com/PowerShell/PowerShell/releases/download/${blobName}/${packageName}"
+    
     Write-Verbose "About to download package from '$downloadURL'"
 
     $tempDir = [System.IO.Path]::GetTempPath()
