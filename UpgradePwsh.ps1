@@ -20,6 +20,9 @@ function Invoke-PowerShellVersionDownload {
 
     switch ($PSCmdlet.ParameterSetName) {
         'predefined' { 
+            if ($ReleaseVersion -eq 'daily') {
+                Write-Warning 'Daily is currently not working. See https://github.com/PowerShell/PowerShell/issues/24566 for more information.'
+            }
             $versionUri = "https://aka.ms/pwsh-buildinfo-$ReleaseVersion"
             Write-Verbose "Getting version from shortlink: $versionUri"
             
@@ -27,8 +30,8 @@ function Invoke-PowerShellVersionDownload {
             
             Write-Verbose $metadata
 
-            $blobName = $metadata.ReleaseTag
             $release = $metadata.ReleaseTag -replace '^v'
+            $blobName = $metadata.ReleaseTag
         
             if (($IsWindows) -or (-not ([string]::IsNullOrEmpty("$env:ProgramFiles")))) {
                 switch ($env:PROCESSOR_ARCHITECTURE) {
@@ -59,6 +62,9 @@ function Invoke-PowerShellVersionDownload {
             else {
                 throw 'Unknown platform. I dont know how to support this.'
             }
+
+            
+            $downloadURL = "https://powershellinfraartifacts-gkhedzdeaghdezhr.z01.azurefd.net/install/${blobName}/${packageName}"
         }
         'static' { 
             if (($OperatingSystem -ne 'win') -and ($Architecture -eq 'x86')) {
@@ -76,12 +82,13 @@ function Invoke-PowerShellVersionDownload {
                 'osx' { $packageName = "powershell-$release-osx-$Architecture.tar.gz" }
                 Default { throw 'Unknown platform. I dont know how to support this.' }
             }
+
+            
+            $downloadURL = "https://github.com/PowerShell/PowerShell/releases/download/${blobName}/${packageName}"
         }
     }
 
 
-    $downloadURL = "https://github.com/PowerShell/PowerShell/releases/download/${blobName}/${packageName}"
-    
     Write-Verbose "About to download package from '$downloadURL'"
 
     $tempDir = [System.IO.Path]::GetTempPath()
