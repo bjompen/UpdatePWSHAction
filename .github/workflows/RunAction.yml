@@ -14,23 +14,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@v1.0.0
-      - shell: pwsh
-        run: |
-          $PSVersionTable
-  TestDaily:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-      - shell: pwsh
-        run: |
-          $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@v1.0.0
-        with:
-          ReleaseVersion: 'Daily'
+      - uses: bjompen/UpdatePWSHAction@v1.0.1
       - shell: pwsh
         run: |
           $PSVersionTable
@@ -44,7 +28,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@v1.0.0
+      - uses: bjompen/UpdatePWSHAction@v1.0.1
         with:
           ReleaseVersion: 'Preview'
       - shell: pwsh
@@ -60,9 +44,9 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@v1.0.0
+      - uses: bjompen/UpdatePWSHAction@v1.0.1
         with:
-          FixedVersion: '7.1.0'
+          FixedVersion: '7.4.0'
       - shell: pwsh
         run: |
           $PSVersionTable
@@ -78,7 +62,7 @@ jobs:
       - shell: pwsh
         run: |
           $PSVersionTable
-      - uses: bjompen/UpdatePWSHAction@v1.0.0
+      - uses: bjompen/UpdatePWSHAction@v1.0.1
         with:
           FixedVersion: '666.666.666'
         
