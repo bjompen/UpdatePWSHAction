@@ -8,4 +8,4 @@ Get-ChildItem index.js -ErrorAction SilentlyContinue | Remove-Item -ErrorAction 
 & tsc
 Pop-Location
 
-& tfx extension create --manifest-globs .\vss-extension.json
+& tfx extension create --manifest-globs vss-extension.json
